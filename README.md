@@ -188,7 +188,7 @@ La vidéo explicative est accessible depuis le lien indiqué dans la section sui
 
 ### Prérequis
 
-- Python 3.
+- Python 3.13.18
 - Jupyter Notebook, JupyterLab ou Google Colab.
 - Une connexion Internet pour récupérer les données depuis Yahoo Finance.
 

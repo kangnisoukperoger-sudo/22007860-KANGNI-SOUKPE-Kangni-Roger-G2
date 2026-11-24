@@ -1,1 +1,11 @@
 
+# Projet F24 - Corrélation entre le Nasdaq et le S&P 500
+# Version de Python utilisée : 3.13.18
+
+yfinance==0.2.66
+pandas==2.2.3
+numpy==2.4.6
+matplotlib==3.10.0
+seaborn==0.13.2
+scikit-learn==1.6.1
+

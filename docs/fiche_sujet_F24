@@ -1,20 +1,21 @@
-# Fiche du sujet — F24
+# FICHE DU SUJET F24 — MACHINE LEARNING APPLIQUÉ À LA FINANCE
 
-## 1. Identification
+## 1. Identification du projet
 
-- **Établissement :** École Nationale de Commerce et de Gestion (ENCG) de Settat
-- **Module :** Bases de données et Data Science (BD & DS)
-- **Niveau :** S7 FIN et CI — année universitaire 2026–2027
 - **Étudiant :** Roger Kangni Soukpe
 - **Code Apogée :** 22007860
 - **Groupe :** 2
-- **Sujet attribué :** F24 — Corrélation Nasdaq et S&P 500
-- **Thème initial indiqué dans l'énoncé :** Régression sur une mesure glissante
-- **Approche effectivement retenue :** Classification binaire par régression logistique, avec l'accord du professeur
+- **Établissement :** École Nationale de Commerce et de Gestion de Settat (ENCG Settat)
+- **Module :** Base de données et Data Science (BD & DS)
+- **Année universitaire :** 2026–2027
+- **Sujet attribué :** F24
+- **Intitulé :** Corrélation entre le Nasdaq et le S&P 500
 
-## 2. Contexte et problématique financière
+## 2. Contexte et problématique
 
-Le Nasdaq Composite et le S&P 500 sont deux indices majeurs du marché boursier américain. Leur corrélation permet de mesurer l'intensité de leur relation linéaire au fil du temps. Cette relation peut varier selon les conditions des marchés financiers.
+Le Nasdaq Composite et le S&P 500 sont deux indices boursiers majeurs du marché américain. Leurs évolutions sont généralement liées, mais l'intensité de leur relation peut varier en fonction des conditions économiques et financières.
+
+L'étude de leur corrélation glissante permet d'observer l'évolution de cette relation au cours du temps et d'étudier sa prévisibilité à partir des données historiques.
 
 **Problématique :**
 
@@ -22,85 +23,129 @@ Le Nasdaq Composite et le S&P 500 sont deux indices majeurs du marché boursier 
 
 ## 3. Objectif du projet
 
-Construire et évaluer un modèle de classification binaire capable de prévoir le sens d'évolution de la corrélation entre les deux indices à un horizon de 20 séances boursières, en utilisant leurs rendements journaliers et leur corrélation glissante passée.
+L'objectif est de construire un modèle de Machine Learning capable de prédire le sens d'évolution de la corrélation entre le Nasdaq et le S&P 500 sur un horizon de 20 séances boursières.
 
-## 4. Définition de la tâche et de la cible
+Pour atteindre cet objectif, le travail consiste à :
+
+- Collecter les données historiques des deux indices.
+- Calculer leurs rendements journaliers.
+- Calculer leur corrélation glissante sur une fenêtre de 60 séances.
+- Construire une variable cible binaire représentant l'évolution future de la corrélation.
+- Entraîner et évaluer un modèle de classification.
+- Comparer ses performances à une référence naïve.
+
+## 4. Nature du problème et approche retenue
 
 - **Type d'apprentissage :** apprentissage supervisé.
 - **Tâche :** classification binaire.
 - **Algorithme principal :** régression logistique.
+- **Modèle de référence :** DummyClassifier (classe majoritaire).
 - **Fenêtre de calcul de la corrélation :** 60 séances boursières.
 - **Horizon de prévision :** 20 séances boursières.
-- **Classe 0 :** la corrélation future diminue ou reste stable par rapport à la corrélation observée à la date courante.
-- **Classe 1 :** la corrélation future augmente par rapport à la corrélation observée à la date courante.
-- **Métrique principale retenue :** Macro-F1.
-- **Métriques secondaires :** Balanced Accuracy et Recall de la classe 1.
 
-La variable `corr_future_20` sert uniquement à construire la cible `target`. Elle n'est pas utilisée comme variable explicative du modèle.
+**Définition de la variable cible :**
+
+- **Classe 0 :** la corrélation diminue ou reste stable.
+- **Classe 1 :** la corrélation augmente.
+
+La cible est construite en comparant la corrélation glissante observée à une date donnée avec celle observée 20 séances plus tard.
 
 ## 5. Description du jeu de données
 
-- **Nom du jeu de données :** historiques quotidiens du Nasdaq Composite et du S&P 500.
-- **Plateforme de diffusion des données :** Yahoo Finance.
-- **Outil de récupération :** bibliothèque Python `yfinance`.
-- **Symbole Nasdaq Composite :** `^IXIC`.
-- **Symbole S&P 500 :** `^GSPC`.
-- **Période demandée :** du 17 novembre 2016 au 17 novembre 2026 (borne de fin exclusive dans l'appel de téléchargement).
-- **Période effectivement observée :** du 17 novembre 2016 au 16 novembre 2026.
-- **Fréquence :** quotidienne, selon les séances de marché disponibles.
-- **Unité d'observation :** une date de séance boursière commune aux deux indices.
-- **Taille initiale :** 2 512 observations et 2 variables de prix ajustés.
-- **Après calcul des rendements :** 2 511 observations avant les autres transformations.
-- **Après calcul de la corrélation glissante, construction de la cible et suppression des observations incomplètes :** 2 432 observations dans le jeu destiné au Machine Learning.
+### 5.1. Source des données
 
-Les téléchargements ont été effectués séparément pour les deux symboles avec `yfinance.download`, puis les séries ont été réunies par date. Le paramètre `auto_adjust=True` a été utilisé et la colonne `Close` a été extraite ; il s'agit donc des cours de clôture ajustés retournés après ajustement automatique.
+- **Plateforme :** Yahoo Finance.
+- **Bibliothèque de récupération :** Python `yfinance`.
+- **Indice 1 :** Nasdaq Composite (`^IXIC`).
+- **Indice 2 :** S&P 500 (`^GSPC`).
+- **Date d'extraction :** 17 novembre 2026.
+- **Période étudiée :** du 17 novembre 2016 au 16 novembre 2026.
+- **Fréquence :** quotidienne, selon les séances boursières.
+- **Unité d'observation :** une séance boursière.
+- **Taille initiale :** 2 512 observations et 2 variables.
+- **Nombre de rendements disponibles :** 2 511 pour chaque indice.
+- **Jeu de données final après préparation :** 2 432 observations et 5 colonnes.
 
-## 6. Dictionnaire des principales variables
+### 5.2. Liens des sources
 
-| Variable | Rôle | Type | Unité | Valeurs manquantes / remarque |
-|---|---|---|---|---|
-| `Nasdaq` | Prix ajusté dans `donnees`, puis rendement explicatif dans `rendements` et `donnees_ml` | Numérique continue | Points d'indice, puis % | 0 dans les prix alignés ; 1 rendement manquant initial avant suppression |
-| `SP500` | Prix ajusté dans `donnees`, puis rendement explicatif dans `rendements` et `donnees_ml` | Numérique continue | Points d'indice, puis % | 0 dans les prix alignés ; 1 rendement manquant initial avant suppression |
-| `corr_60` | Variable explicative | Numérique continue | Coefficient de corrélation, sans unité | 59 valeurs manquantes au début de la série de rendements avant suppression |
-| `corr_future_20` | Variable intermédiaire de construction de la cible uniquement | Numérique continue | Coefficient de corrélation, sans unité | 20 valeurs manquantes en fin de période avant suppression |
-| `target` | Variable cible | Binaire (0/1) | Sans unité | 0 dans le jeu final après suppression des observations incomplètes |
+- Nasdaq Composite : https://finance.yahoo.com/quote/%5EIXIC/history/
+- S&P 500 : https://finance.yahoo.com/quote/%5EGSPC/history/
+- Documentation de yfinance : https://github.com/ranaroussi/yfinance
 
-**Précision sur les noms `Nasdaq` et `SP500` :** les mêmes noms de colonnes sont conservés au fil du traitement. Dans le DataFrame initial `donnees`, ils représentent les cours ajustés. Dans `rendements` puis `donnees_ml`, ils représentent les rendements journaliers en pourcentage. Dans le modèle, seules les colonnes `Nasdaq`, `SP500` et `corr_60` constituent les variables explicatives (`X`).
+### 5.3. Dictionnaire des variables
 
-Dans le jeu final `donnees_ml`, les cinq colonnes présentes (`Nasdaq`, `SP500`, `corr_60`, `corr_future_20` et `target`) ne comportent plus de valeurs manquantes après `dropna()`.
+| Variable | Rôle | Type | Unité |
+|---|---|---|---|
+| Nasdaq (prix) | Donnée initiale | Numérique continue | Points d'indice |
+| SP500 (prix) | Donnée initiale | Numérique continue | Points d'indice |
+| Nasdaq (rendement) | Variable explicative | Numérique continue | Pourcentage (%) |
+| SP500 (rendement) | Variable explicative | Numérique continue | Pourcentage (%) |
+| corr_60 | Variable explicative | Numérique continue | Coefficient de corrélation |
+| corr_future_20 | Variable intermédiaire de construction de la cible | Numérique continue | Coefficient de corrélation |
+| target | Variable cible | Binaire (0 ou 1) | Sans unité |
 
-## 7. Sources, références et conditions d'utilisation
+**Précision :** les colonnes `Nasdaq` et `SP500` désignent initialement les cours ajustés des indices, puis leurs rendements journaliers dans le jeu de données préparé.
 
-### Sources des données
+La variable `corr_future_20` est utilisée uniquement pour construire la cible et n'est pas intégrée aux variables explicatives du modèle.
 
-- Yahoo Finance — historique du Nasdaq Composite (`^IXIC`) : https://finance.yahoo.com/quote/%5EIXIC/history/
-- Yahoo Finance — historique du S&P 500 (`^GSPC`) : https://finance.yahoo.com/quote/%5EGSPC/history/
-- Date d'extraction des données : **17 novembre 2026**.
+## 6. Qualité et préparation des données
 
-### Outil de récupération
+Les principales vérifications et transformations effectuées sont les suivantes :
 
-- Documentation de `yfinance` : https://ranaroussi.github.io/yfinance/
-- Dépôt GitHub de `yfinance` : https://github.com/ranaroussi/yfinance
+- Vérification des types de variables.
+- Vérification de l'ordre chronologique des observations.
+- Contrôle des dates dupliquées.
+- Recherche des valeurs manquantes.
+- Analyse statistique et détection des valeurs extrêmes.
+- Calcul des rendements journaliers.
+- Calcul de la corrélation glissante sur 60 séances.
+- Construction de la variable cible sur un horizon de 20 séances.
+- Séparation chronologique en ensembles d'entraînement, de validation et de test, avec une purge de 20 séances aux frontières.
 
-### Licence et restrictions d'utilisation
+Les valeurs extrêmes ont été conservées, car elles peuvent représenter des événements réels sur les marchés financiers.
 
-Aucune licence ouverte de redistribution des données Yahoo Finance n'a été identifiée dans la documentation consultée. La documentation de `yfinance` précise que la bibliothèque est un outil indépendant, non affilié à Yahoo, et que l'API Yahoo Finance est destinée à un usage personnel. L'aide Yahoo Finance indique également que les informations diffusées ne doivent pas être redistribuées.
+## 7. Méthodologie d'évaluation
 
-En conséquence :
+Le modèle de régression logistique est évalué et comparé à une référence naïve construite avec `DummyClassifier(strategy="most_frequent")`.
 
-- Les données sont utilisées dans le cadre de ce travail pédagogique et d'analyse.
-- Le présent dépôt fournit le code et la procédure de récupération ; il ne doit pas être considéré comme accordant une licence de redistribution des données Yahoo Finance.
-- La licence Apache 2.0 de la bibliothèque `yfinance` concerne le logiciel `yfinance` et **ne s'étend pas** aux données téléchargées depuis Yahoo Finance.
-- Toute réutilisation ou redistribution des données doit respecter les conditions applicables de Yahoo Finance et les droits des fournisseurs de données concernés.
+Les ensembles de données sont répartis chronologiquement :
 
-Références relatives aux conditions d'utilisation :
+- Entraînement : 1 682 observations.
+- Validation : 345 observations.
+- Test : 365 observations.
 
-- Documentation officielle de `yfinance` et avertissement légal : https://ranaroussi.github.io/yfinance/
-- Aide Yahoo Finance, fournisseurs et redistribution des données : https://help.yahoo.com/kb/account/SLN2310.html
+Les métriques retenues sont :
+
+- **Macro-F1 :** métrique principale.
+- **Balanced Accuracy :** métrique secondaire.
+- **Recall de la classe 1 :** métrique secondaire.
+
+Les performances finales sont mesurées sur le jeu de test, conservé à l'écart pendant l'entraînement et le réglage des hyperparamètres.
+
+## 8. Sources, licence et conditions d'utilisation
+
+Les données financières ont été récupérées à partir de Yahoo Finance à l'aide de la bibliothèque Python `yfinance`.
+
+Il convient de distinguer les conditions d'utilisation de la bibliothèque et celles des données financières :
+
+- **Bibliothèque `yfinance` :** logiciel libre distribué sous licence Apache 2.0.
+- **Données Yahoo Finance :** leur utilisation est soumise aux conditions générales et aux conditions applicables aux services Yahoo. La licence Apache 2.0 de `yfinance` ne s'étend pas aux données téléchargées.
+- **Cadre d'utilisation du projet :** exploitation à des fins pédagogiques et de recherche académique.
+
+La documentation officielle de `yfinance` précise que l'outil n'est ni affilié à Yahoo Finance ni approuvé par cette plateforme et renvoie vers les conditions d'utilisation de Yahoo concernant les données récupérées.
+
+En conséquence, les données brutes ne sont pas redistribuées dans le dépôt GitHub sans autorisation appropriée. La procédure de récupération des données est documentée dans le notebook.
+
+**Références relatives aux conditions d'utilisation :**
+
+- Licence Apache 2.0 de yfinance : https://github.com/ranaroussi/yfinance/blob/main/LICENSE.txt
+- Documentation et avertissement juridique de yfinance : https://github.com/ranaroussi/yfinance
 - Conditions d'utilisation Yahoo : https://legal.yahoo.com/us/en/yahoo/terms/otos/index.html
 
-## 8. Reproductibilité
+## 9. Résultat attendu du projet
 
-Les données peuvent être récupérées à nouveau à l'aide du script de téléchargement présent dans le notebook, en utilisant les symboles `^IXIC` et `^GSPC`, les dates indiquées et la bibliothèque `yfinance`.
+Le résultat attendu est un modèle de classification capable d'estimer la probabilité d'une augmentation future de la corrélation entre les deux indices.
 
-Les traitements ultérieurs comprennent le calcul des rendements journaliers, la corrélation glissante sur 60 séances, la construction de la cible à 20 séances et la séparation chronologique des ensembles d'entraînement, de validation et de test.
+L'évaluation doit permettre de déterminer si la régression logistique apporte une amélioration par rapport à une stratégie naïve et d'identifier ses limites dans la prévision de l'évolution des relations entre marchés financiers.
+
+---

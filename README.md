@@ -181,6 +181,7 @@ La vidéo explicative est accessible depuis le lien indiqué dans la section sui
 - **Présentation PowerPoint :** [Télécharger le fichier source](https://docs.google.com/presentation/d/1NDTHfv5nVzGdszhcyyZi7NKdn4b94mMT/edit?usp=sharing&ouid=105769077090336634002&rtpof=true&sd=true)
 - **Rapport PDF :** [Consulter le rapport](https://drive.google.com/file/d/1wMK950vCDvkukgv4y-gsRYLwS9SHsQTY/view?usp=sharing)
 - **Vidéo explicative :** [Regarder la démonstration du projet](https://drive.google.com/file/d/1xTBeHT6_Yrz-aQBECBWHsvkdf0q7f3Pc/view?usp=sharing)
+- - [Ouvrir le notebook directement dans Google Colab](https://colab.research.google.com/github/kangnisoukperoger-sudo/22007860-KANGNI-SOUKPE-Kangni-Roger-G2/blob/main/notebooks/projet_FXX.ipynb)
 
 ---
 
